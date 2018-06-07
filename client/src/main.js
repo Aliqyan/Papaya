@@ -7,6 +7,8 @@ import VueSweetalert2 from 'vue-sweetalert2'
 import Buefy from 'buefy'
 import 'buefy/lib/buefy.css'
 
+// main difference from the normal file is the Buefy framework import
+
 Vue.use(Buefy, {
   defaultIconPack: 'mdi'
 })

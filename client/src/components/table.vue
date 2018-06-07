@@ -1,7 +1,7 @@
 <template>
   <div class="posts">
     <img src="../assets/papayaicon.png" @click="isCardModalActive = true" width="150"/>
-
+      <!-- Modal that activates when Papaya logo is pressed that acts as a tutorial for using the site -->
       <b-modal :active.sync="isCardModalActive" :width="640" scroll="keep">
           <div class="card">
             <div class="modal-background"></div>
@@ -33,6 +33,10 @@
                 <div class="has-text-left">
                   <p>Luckily, our entry editing is intuitive. Simply remember that some of the fields cannot be empty as you'll see by the disabled update button. To exit the edit entry page you can press on the Papaya logo or the back arrow.</p>
                 </div>
+                <br>
+                <div class="has-text-left">
+                  <p>** Remember to refresh the page after new entries have been added via the app! **</p>
+                </div>
               </section>
             </div>
           </div>
@@ -44,11 +48,12 @@
         <div class="columns is-multiline">
 
         <div class="column is-one-quarter">
+          <!-- empty bulma columns used for formatting (separates the page into a grid) -->
         </div>
 
         <div class="column is-one-quarter">
         </div>
-
+        <!-- pagination option select -->
         <div class="column is-one-quarter">
           <b-select v-model="perPage" :disabled="!isPaginated">
                 <option value="5">5 per page</option>
@@ -57,14 +62,14 @@
                 <option value="20">20 per page</option>
             </b-select>
         </div>
-
+        <!-- search bar -->
         <div class="column is-one-quarter">
           <b-field>
             <b-input icon="magnify" name="searchInput" type="search" placeholder="Search..." v-model="searchInput"></b-input>
             <button class="button is-primary" @click="searchPosts">Search</button>
           </b-field>
         </div>
-
+        <!-- checkbox filter table -->
         <div class="column is-one-fifth has-text-left">
           <aside class="menu">
             <p class="menu-label">
@@ -121,7 +126,7 @@
             <a class="button is-link" @click="filterPosts">Filter</a>
           </div>
         </div>
-
+        <!-- data table -->
         <div class="column is-four-fifths">
             <b-table :data="isEmpty ? [] : posts"
             :paginated="isPaginated"
@@ -149,7 +154,7 @@
                     <a href="#" @click="deletePost(post.row._id)">Delete</a>
                 </b-table-column>
               </template>
-
+              <!-- template is used when table is empty -->
               <template slot="empty">
                 <section class="section">
                     <div class="content has-text-grey has-text-centered">
@@ -233,10 +238,12 @@ export default {
     }
   },
   mounted () {
+    // gets the instruments upon loading in
     this.getPosts()
   },
   methods: {
     capitalize () {
+      // by default all the fields in the database are lowercase so to display them in the table and have the first letter capitalized, they need to go through this method
       for (var i = 0; i < this.posts.length; i++) {
         // console.log(this.posts[i].qrID)
         this.posts[i].instrument = (this.posts[i].instrument).substring(0, 1).toUpperCase() + (this.posts[i].instrument).substring(1)
@@ -244,6 +251,7 @@ export default {
         this.posts[i].loanee = (this.posts[i].loanee).substring(0, 1).toUpperCase() + (this.posts[i].loanee).substring(1)
       }
     },
+    // uses the loading template as the table receives an array of instruments to display from the database
     async getPosts () {
       this.isLoading = true
       const response = await PostsService.fetchPosts()
@@ -252,6 +260,7 @@ export default {
       this.capitalize()
       this.isLoading = false
     },
+    // filters the instruments based on a tag (tagToSend) and returns them for the table to display
     async filterPosts () {
       // console.log(this.checkboxGroup)
       if (this.checkboxGroup.length === 0) {
@@ -269,6 +278,7 @@ export default {
         this.capitalize()
       }
     },
+    // similar to filterPosts, returns an array of instruments to display based on the param sent
     async searchPosts () {
       // console.log(this.searchInput.toLowerCase())
       if (this.searchInput.length === 0) {
@@ -279,6 +289,7 @@ export default {
         this.capitalize()
       }
     },
+    // pops up modal which asks the user whether or not they want to delete an entry; if they say yes, a command will be sent to the database to delete and entry and returns a new array without that entry to display to the table
     async deletePost (id) {
       const $this = this
       $this.$swal({
