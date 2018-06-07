@@ -10,7 +10,7 @@ app.use(cors())
 
 
 var mongoose = require('mongoose');
-//online
+// mongo url --> online db
 mongoose.connect('mongodb://heroku_s88x8z9j:grrt50o2nn2115urhjlkhrm6m6@ds237770.mlab.com:37770/heroku_s88x8z9j');
 
 var db = mongoose.connection;
@@ -20,11 +20,12 @@ db.once("open", function(callback){
   console.log("Connection success");
 });
 
+//declare models used
 var Instrument = require("../models/instrument");
 var Tag = require("../models/tag");
 
 
-// Add new post
+// Add new instrument
 app.post('/instruments', (req, res) => {
   var db = req.db;
   var instrument = req.body.instrument;
@@ -54,7 +55,7 @@ app.post('/instruments', (req, res) => {
   })
 })
 
-// Fetch single post
+// Fetch a single instrument
 app.get('/instruments/:id', (req, res) => {
   var db = req.db;
   Instrument.findById(req.params.id, 'instrument status serial loanee tags qrID', function (error, post) {
@@ -62,19 +63,8 @@ app.get('/instruments/:id', (req, res) => {
     res.send(post)
   })
 })
-/*
-// Fetch post by tags
-app.get('/instrument/tag/:tag', (req, res) => {
-  var db = req.db;
-  console.log(req.params.tag);
-  var arr = (req.params.tag).split("+");
-  Instrument.find( {tags : { $all: arr }}, 'instrument status serial loanee tags', function (error, post) {
-    if (error) { console.error(error); }
-    res.send(post)
-  })
-})*/
 
-// Search by QR
+// Search instrument by QR
 app.get('/instruments/searchQR/:code', (req, res) => {
   var db = req.db;
   console.log(req.params.code);
@@ -85,7 +75,7 @@ app.get('/instruments/searchQR/:code', (req, res) => {
 })
 
 
-// Search
+// Search instrument by any field
 app.get('/instruments/search/:query', (req, res) => {
   var db = req.db;
   console.log(req.params.query);
@@ -95,7 +85,7 @@ app.get('/instruments/search/:query', (req, res) => {
   })
 })
 
-// Fetch post by tags
+// search instruments by tags
 app.get('/instruments/tag/:tag', (req, res) => {
   var db = req.db;
   console.log(req.params.tag);
@@ -106,7 +96,7 @@ app.get('/instruments/tag/:tag', (req, res) => {
   })
 })
 
-// Update a post
+// Update an instrument
 app.put('/instruments/:id', (req, res) => {
   var db = req.db;
   Instrument.findById(req.params.id, 'instrument status serial loanee tags qrID', function (error, instrument) {
@@ -131,7 +121,7 @@ app.put('/instruments/:id', (req, res) => {
 
 
 
-// Delete a post
+// Delete an instrument
 app.delete('/instruments/:id', (req, res) => {
   console.log('delete me...');
   var db = req.db;
@@ -149,7 +139,7 @@ app.delete('/instruments/:id', (req, res) => {
   })
 })
 
-// Fetch all posts
+// Fetch all instruments
 app.get('/instruments', (req, res) => {
   Instrument.find({}, 'instrument status serial loanee tags qrID', function (error, instruments) {
     if (error) { console.error(error); }
@@ -169,7 +159,7 @@ app.get('/tags', (req, res) => {
   }).sort({_id:-1})
 })
 
-// Add new post
+// Add new tag to tag collection
 app.post('/tags', (req, res) => {
   var db = req.db;
   var tagName = req.body.tagName;
@@ -189,7 +179,7 @@ app.post('/tags', (req, res) => {
   })
 })
 
-// Delete a post
+// Delete a tag
 app.delete('/tags/:tagName', (req, res) => {
   console.log('delete me...');
   var db = req.db;
@@ -207,7 +197,8 @@ app.delete('/tags/:tagName', (req, res) => {
   })
 })
 
-//local host
-//app.listen(8081)
-//online version
+// local host --> for local testing
+// app.listen(8081)
+
+// online version
 app.listen(process.env.PORT)
