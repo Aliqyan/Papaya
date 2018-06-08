@@ -242,14 +242,25 @@ export default {
     this.getPosts()
   },
   methods: {
+    // by default all the fields in the database are lowercase so to display them in the table and have the first letter of each word capitalized, they need to go through this method
     capitalize () {
-      // by default all the fields in the database are lowercase so to display them in the table and have the first letter capitalized, they need to go through this method
       for (var i = 0; i < this.posts.length; i++) {
         // console.log(this.posts[i].qrID)
-        this.posts[i].instrument = (this.posts[i].instrument).substring(0, 1).toUpperCase() + (this.posts[i].instrument).substring(1)
-        this.posts[i].status = (this.posts[i].status).substring(0, 1).toUpperCase() + (this.posts[i].status).substring(1)
-        this.posts[i].loanee = (this.posts[i].loanee).substring(0, 1).toUpperCase() + (this.posts[i].loanee).substring(1)
+        this.posts[i].instrument = this.capitalizeImplentation(this.posts[i].instrument) // (this.posts[i].instrument).substring(0, 1).toUpperCase() + (this.posts[i].instrument).substring(1)
+        this.posts[i].status = this.capitalizeImplentation(this.posts[i].status) // (this.posts[i].status).substring(0, 1).toUpperCase() + (this.posts[i].status).substring(1)
+        this.posts[i].loanee = this.capitalizeImplentation(this.posts[i].loanee) // (this.posts[i].loanee).substring(0, 1).toUpperCase() + (this.posts[i].loanee).substring(1)
       }
+    },
+    // helper method for capitalize, ensures that each word is capitalized
+    capitalizeImplentation (str) {
+      var arr = str.split(' ')
+      console.log(arr)
+      var result = ''
+      for (var i = 0; i < arr.length; i++) {
+        var temp = arr[i].toLowerCase()
+        result += temp.substring(0, 1).toUpperCase() + temp.substring(1) + ' '
+      }
+      return result.trim()
     },
     // uses the loading template as the table receives an array of instruments to display from the database
     async getPosts () {
