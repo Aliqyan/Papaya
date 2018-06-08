@@ -254,7 +254,7 @@ export default {
     // helper method for capitalize, ensures that each word is capitalized
     capitalizeImplentation (str) {
       var arr = str.split(' ')
-      console.log(arr)
+      // console.log(arr)
       var result = ''
       for (var i = 0; i < arr.length; i++) {
         var temp = arr[i].toLowerCase()
